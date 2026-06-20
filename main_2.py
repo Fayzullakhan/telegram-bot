@@ -764,7 +764,7 @@ async def admin_pending(callback: CallbackQuery):
         caption += f"\n\n🆔 ID: {listing['id']}\n👤 User: {listing['user_id']}"
         photos = listing["photos"].split(",")
         
-        memedia = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]dia[0].parse_mode = "HTML"
+        media = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]dia[0].parse_mode = "HTML"
         await bot.send_media_group(callback.message.chat.id, media)
         await callback.message.answer(
             t(admin_lang, "adm_choose_action"),
