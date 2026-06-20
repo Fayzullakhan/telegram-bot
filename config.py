@@ -1,7 +1,7 @@
 # config.py
 # Botni sozlash uchun barcha asosiy o'zgaruvchilar shu yerda
 
-BOT_TOKEN = "8830330537:AAGUuYz-8smeTXqvKFTlnClVjQQIQIH7BuY"
+BOT_TOKEN = "8871848645:AAHxtFXUCFMDN7mKJ9-YdHzuxqUmwqHVYP4"
 
 # Admin(lar) Telegram ID raqamlari (bir nechta bo'lishi mumkin)
 ADMIN_IDS = [8768742753,8469134615, 7443915351, 589336241]
