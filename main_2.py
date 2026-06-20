@@ -460,17 +460,11 @@ async def show_add_listing_preview(message: Message, state: FSMContext, user_id:
     photos = TEMP_PHOTOS.get(user_id, [])
     user = db.get_user(user_id)
     caption = format_listing_caption(normalized, lang, phone=user["phone"] if user else None)
-
+    
     await state.set_state(AddListing.confirming)
     await message.answer(t(lang, "ad_preview"))
 
-    media = [InputMediaPhoto(media=p) for p in photos]
-    media = [
-    InputMediaPhoto(media=photos[0], caption=caption, parse_mode="HTML"),
-    *[InputMediaPhoto(media=p) for p in photos[1:10]]
-]
-
-    media[0].parse_mode = "HTML"
+    media = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]
     await bot.send_media_group(message.chat.id, media)
 
     await message.answer(t(lang, "confirm_question"), reply_markup=kb.confirm_listing_keyboard(lang))
@@ -607,9 +601,7 @@ async def add_listing_submit(callback: CallbackQuery, state: FSMContext):
             admin_lang = admin_user["lang"] if admin_user else "uz"
             caption = format_listing_caption(listing_data, admin_lang, phone=user["phone"])
             caption += f"\n\n🆔 ID: {listing_id}\n👤 User: {user_id} (@{callback.from_user.username or '-'})"
-            media = [InputMediaPhoto(media=p) for p in photos]
-            media[0].caption = caption
-            media[0].parse_mode = "HTML"
+            media = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]
             await bot.send_media_group(admin_id, media)
             await bot.send_message(
                 admin_id, t(admin_lang, "adm_choose_action"),
@@ -647,9 +639,7 @@ async def admin_approve(callback: CallbackQuery):
     caption = format_listing_caption(data, lang, vip=bool(listing["is_vip"]), phone=OWNER_PHONE)
     photos = listing["photos"].split(",")
 
-    media = [InputMediaPhoto(media=p) for p in photos]
-    media[0].caption = caption
-    media[0].parse_mode = "HTML"
+    media = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]
     sent = await bot.send_media_group(CHANNEL_ID, media)
     channel_msg_id = sent[0].message_id
     db.set_listing_channel_msg(listing_id, channel_msg_id)
@@ -773,10 +763,8 @@ async def admin_pending(callback: CallbackQuery):
         caption = format_listing_caption(data, admin_lang, phone=user["phone"] if user else None)
         caption += f"\n\n🆔 ID: {listing['id']}\n👤 User: {listing['user_id']}"
         photos = listing["photos"].split(",")
-        media = [InputMediaPhoto(media=p) for p in photos]
-        media[0].caption = caption
         
-        media[0].parse_mode = "HTML"
+        memedia = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]dia[0].parse_mode = "HTML"
         await bot.send_media_group(callback.message.chat.id, media)
         await callback.message.answer(
             t(admin_lang, "adm_choose_action"),
@@ -982,9 +970,7 @@ async def show_listings(message: Message, listings, lang):
         data = listing_dict_from_row(listing)
         caption = format_listing_caption(data, lang, vip=bool(listing["is_vip"]), phone=OWNER_PHONE)
         photos = listing["photos"].split(",")
-        media = [InputMediaPhoto(media=p) for p in photos[:10]]
-        media[0].caption = caption
-        media[0].parse_mode = "HTML"
+        media = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]
         try:
             await bot.send_media_group(message.chat.id, media)
         except Exception as e:
@@ -1067,9 +1053,7 @@ async def show_my_listings(message: Message, user_id: int, lang: str):
         caption = format_listing_caption(data, lang, vip=bool(listing["is_vip"]))
         caption += t(lang, "listing_status_line", status=listing_status_text(lang, listing["status"]))
         photos = listing["photos"].split(",")
-        media = [InputMediaPhoto(media=p) for p in photos[:10]]
-        media[0].caption = caption
-        media[0].parse_mode = "HTML"
+        media = [InputMediaPhoto(media=photos[0], caption=caption)] + [InputMediaPhoto(media=p) for p in photos[1:10]]
         try:
             await bot.send_media_group(message.chat.id, media)
         except Exception as e:
