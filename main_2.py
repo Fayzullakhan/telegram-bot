@@ -126,7 +126,7 @@ def format_listing_caption(data: dict, lang="uz", vip=False, phone=None):
     star = "⭐ VIP ⭐\n" if vip else ""
     if lang == "ru":
         text = (
-            f"{star}🚗 <b>{data.get('brand','')} {data.get('model','')}</b>\n\n"
+            f"{star}🚗 {data.get('brand','')} {data.get('model','')}\n\n"
             f"📅 Год: {data.get('year','-')}\n"
             f"🛣 Пробег: {data.get('mileage','-')}\n"
             f"🔋 Батарея: {data.get('battery_capacity','-')}\n"
@@ -139,7 +139,7 @@ def format_listing_caption(data: dict, lang="uz", vip=False, phone=None):
             text += f"📝 Доп: {data.get('extra_info')}\n"
     else:
         text = (
-            f"{star}🚗 <b>{data.get('brand','')} {data.get('model','')}</b>\n\n"
+            f"{star}🚗 {data.get('brand','')} {data.get('model','')}\n\n"
             f"📅 Yil: {data.get('year','-')}\n"
             f"🛣 Probeg: {data.get('mileage','-')}\n"
             f"🔋 Batareya: {data.get('battery_capacity','-')}\n"
