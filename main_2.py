@@ -465,7 +465,11 @@ async def show_add_listing_preview(message: Message, state: FSMContext, user_id:
     await message.answer(t(lang, "ad_preview"))
 
     media = [InputMediaPhoto(media=p) for p in photos]
-    media[0].caption = caption
+    media[0] = InputMediaPhoto(
+    media=media[0].media,
+    caption=caption,
+    parse_mode="HTML"
+)
     media[0].parse_mode = "HTML"
     await bot.send_media_group(message.chat.id, media)
 
