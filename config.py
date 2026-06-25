@@ -8,7 +8,7 @@ ADMIN_IDS = [8768742753,8469134615, 7443915351, 589336241]
 
 # Majburiy obuna kanali (e'lonlar ham shu yerga chiqadi)
 CHANNEL_ID = -1002366243994        # kanal ID (raqamli, -100 bilan boshlanadi)
-CHANNEL_USERNAME = "@elecktrichka_xayda"  # kanal username (link yasash uchun)
+CHANNEL_USERNAME = "@elecktrichka_xayda, @hackerdevs"  # kanal username (link yasash uchun)
 OWNER_PHONE = "+998990007458"
 # Moderatsiya / e'lonlar kelib tushadigan admin guruh yoki shaxsiy chat (ixtiyoriy)
 ADMIN_REVIEW_CHAT_ID = ADMIN_IDS[0]
