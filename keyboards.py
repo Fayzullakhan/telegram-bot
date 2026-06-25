@@ -6,7 +6,7 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton
 )
 from texts import t
-from config import CHANNEL_USERNAME, REGIONS, REGION_NAMES
+from config import CHANNEL_USERNAME, REGIONS, REGION_NAMES, REQUIRED_CHANNELS
 
 
 def lang_keyboard():
@@ -74,13 +74,16 @@ def location_keyboard(lang):
     return kb
 
 
-def subscribe_keyboard(lang):
-    channel_link = f"https://t.me/{CHANNEL_USERNAME.replace('@', '')}"
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📢 Kanal / Канал", url=channel_link)],
-        [InlineKeyboardButton(text=t(lang, "check_sub"), callback_data="check_sub")]
-    ])
-    return kb
+def subscribe_keyboard(lang, missing_channels=None):
+    """missing_channels — foydalanuvchi a'zo bo'lmagan kanallar ro'yxati.
+    Agar None berilsa, barcha REQUIRED_CHANNELS ko'rsatiladi."""
+    channels = missing_channels if missing_channels is not None else REQUIRED_CHANNELS
+    rows = []
+    for ch in channels:
+        link = f"https://t.me/{ch['username'].replace('@', '')}"
+        rows.append([InlineKeyboardButton(text=f"📢 {ch['title']}", url=link)])
+    rows.append([InlineKeyboardButton(text=t(lang, "check_sub"), callback_data="check_sub")])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def main_menu_keyboard(lang):
