@@ -1,25 +1,29 @@
 # config.py
-# Botni sozlash uchun barcha asosiy o'zgaruvchilar shu yerda
-
 BOT_TOKEN = "8830330537:AAGUuYz-8smeTXqvKFTlnClVjQQIQIH7BuY"
 
-# Admin(lar) Telegram ID raqamlari (bir nechta bo'lishi mumkin)
-ADMIN_IDS = [8768742753,8469134615, 7443915351, 589336241]
+# Admin(lar) Telegram ID raqamlari
+ADMIN_IDS = [8768742753, 8469134615, 7443915351, 589336241]
 
-# Majburiy obuna kanali (e'lonlar ham shu yerga chiqadi)
-CHANNEL_ID = -1002366243994        # kanal ID (raqamli, -100 bilan boshlanadi)
+# ── E'LONLAR KANALI (tasdiqlangan postlar shu yerga avtomatik jonatiladi) ─────
+CHANNEL_ID = -1002366243994
 CHANNEL_USERNAME = "@elecktrichka_xayda"
+
+# ── MAJBURIY OBUNA KANALLARI (homiylar) ──────────────────────────────────────
+# Qo'shish: yangi dict qo'shing. O'chirish: sharhlang yoki o'chiring.
+REQUIRED_CHANNELS = [
+    {"id": -1002366243994, "username": "@elecktrichka_xayda", "title": "Elektrichka Xayda"},
+    # {"id": -1001234567890, "username": "@homiy_kanal2", "title": "Homiy 2"},
+]
+
 OWNER_PHONE = "+998990007458"
-# Moderatsiya / e'lonlar kelib tushadigan admin guruh yoki shaxsiy chat (ixtiyoriy)
 ADMIN_REVIEW_CHAT_ID = ADMIN_IDS[0]
 
-# DB_PATH o'chirildi — endi Supabase ishlatiladi (database.py ga qarang)
+# DB_PATH ochirildi — Supabase ishlatiladi (database.py ga qarang)
 
 MAX_PHOTOS = 10
 MIN_PHOTOS = 1
 
-# O'zbekiston viloyatlari va ularning tumanlari
-# (e'lon joylashtirishda / qidiruvda inline tugmalar orqali tanlash uchun)
+# O'zbekiston viloyatlari va tumanlari
 REGIONS = {
     "Toshkent shahri": [
         "Bektemir", "Chilonzor", "Yashnobod", "Mirobod", "Mirzo Ulug'bek",
