@@ -17,7 +17,7 @@ from aiogram.exceptions import TelegramBadRequest
 import database as db
 from config import (
     BOT_TOKEN, ADMIN_IDS, CHANNEL_ID, CHANNEL_USERNAME, MAX_PHOTOS, MIN_PHOTOS,
-    OWNER_PHONE, REGION_NAMES, REGIONS,
+    OWNER_PHONE, REGION_NAMES, REGIONS, REQUIRED_CHANNELS,
 )
 from texts import t
 import keyboards as kb
@@ -84,14 +84,31 @@ def is_admin(user_id):
 
 
 async def is_subscribed(user_id) -> bool:
-    try:
-        member = await bot.get_chat_member(CHANNEL_ID, user_id)
-        return member.status not in ("left", "kicked")
-    except TelegramBadRequest:
-        return False
-    except Exception as e:
-        logger.warning(f"Subscription check error: {e}")
-        return False
+    """Barcha majburiy obuna kanallarini tekshiradi. Hammasi OK bo'lsa True."""
+    for ch in REQUIRED_CHANNELS:
+        try:
+            member = await bot.get_chat_member(ch["id"], user_id)
+            if member.status in ("left", "kicked"):
+                return False
+        except TelegramBadRequest:
+            return False
+        except Exception as e:
+            logger.warning(f"Subscription check error (channel {ch['username']}): {e}")
+            return False
+    return True
+
+
+async def get_unsubscribed_channels(user_id) -> list:
+    """Foydalanuvchi a'zo bo'lmagan kanallar ro'yxatini qaytaradi."""
+    missing = []
+    for ch in REQUIRED_CHANNELS:
+        try:
+            member = await bot.get_chat_member(ch["id"], user_id)
+            if member.status in ("left", "kicked"):
+                missing.append(ch)
+        except Exception:
+            missing.append(ch)
+    return missing
 
 
 def append_unit_if_missing(value: str, unit: str) -> str:
@@ -218,9 +235,10 @@ async def cmd_start(message: Message, state: FSMContext):
         db.set_user_subscribed(message.from_user.id, True)
         await send_main_menu(message, lang)
     else:
+        missing = await get_unsubscribed_channels(message.from_user.id)
         await message.answer(
-            t(lang, "subscribe_required", channel=CHANNEL_USERNAME),
-            reply_markup=kb.subscribe_keyboard(lang)
+            t(lang, "subscribe_required"),
+            reply_markup=kb.subscribe_keyboard(lang, missing)
         )
 
 
@@ -248,30 +266,33 @@ async def process_phone(message: Message, state: FSMContext):
 
 
 async def ensure_subscription_or_ask(message: Message, user_id, lang, state: FSMContext):
-    subscribed = await is_subscribed(user_id)
-    if subscribed:
+    missing = await get_unsubscribed_channels(user_id)
+    if not missing:
         db.set_user_subscribed(user_id, True)
         await state.clear()
         await message.answer(t(lang, "sub_ok"))
         await send_main_menu(message, lang)
     else:
         await message.answer(
-            t(lang, "subscribe_required", channel=CHANNEL_USERNAME),
-            reply_markup=kb.subscribe_keyboard(lang)
+            t(lang, "subscribe_required"),
+            reply_markup=kb.subscribe_keyboard(lang, missing)
         )
 
 
 @router.callback_query(F.data == "check_sub")
 async def check_sub_callback(callback: CallbackQuery, state: FSMContext):
     lang = db.get_user(callback.from_user.id)["lang"]
-    subscribed = await is_subscribed(callback.from_user.id)
-    if subscribed:
+    missing = await get_unsubscribed_channels(callback.from_user.id)
+    if not missing:
         db.set_user_subscribed(callback.from_user.id, True)
         await state.clear()
         await callback.message.delete()
         await callback.message.answer(t(lang, "sub_ok"))
         await send_main_menu(callback.message, lang)
     else:
+        await callback.message.edit_reply_markup(
+            reply_markup=kb.subscribe_keyboard(lang, missing)
+        )
         await callback.answer(t(lang, "sub_fail"), show_alert=True)
 
 
@@ -289,9 +310,10 @@ async def guard(message: Message) -> bool:
     if not user["is_subscribed"]:
         subscribed = await is_subscribed(user_id)
         if not subscribed:
+            missing = await get_unsubscribed_channels(user_id)
             await message.answer(
-                t(user["lang"], "subscribe_required", channel=CHANNEL_USERNAME),
-                reply_markup=kb.subscribe_keyboard(user["lang"])
+                t(user["lang"], "subscribe_required"),
+                reply_markup=kb.subscribe_keyboard(user["lang"], missing)
             )
             return False
         db.set_user_subscribed(user_id, True)
