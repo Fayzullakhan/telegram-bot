@@ -13,7 +13,7 @@ OWNER_PHONE = "+998990007458"
 # Moderatsiya / e'lonlar kelib tushadigan admin guruh yoki shaxsiy chat (ixtiyoriy)
 ADMIN_REVIEW_CHAT_ID = ADMIN_IDS[0]
 
-DB_PATH = "ev_market.db"
+# DB_PATH o'chirildi — endi Supabase ishlatiladi (database.py ga qarang)
 
 MAX_PHOTOS = 10
 MIN_PHOTOS = 1
