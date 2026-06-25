@@ -9,8 +9,8 @@ TEXTS = {
         "send_location": "📍 Endi joylashuvingizni yuboring:",
         "location_button": "📍 Lokatsiyani yuborish",
         "subscribe_required": (
-            "❗️ Botdan foydalanish uchun avval kanalimizga a'zo bo'ling:\n{channel}\n\n"
-            "A'zo bo'lgach, pastdagi «✅ Tekshirish» tugmasini bosing."
+            "❗️ Botdan foydalanish uchun quyidagi kanallarga a'zo bo'ling.\n"
+            "A'zo bo'lgach, «✅ Tekshirish» tugmasini bosing."
         ),
         "check_sub": "✅ Tekshirish",
         "sub_ok": "✅ Tabriklaymiz! Endi botdan to'liq foydalanishingiz mumkin.",
