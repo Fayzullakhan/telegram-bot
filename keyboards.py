@@ -81,9 +81,7 @@ def subscribe_keyboard(lang, missing_channels=None):
     rows = []
     for ch in channels:
         link = f"https://t.me/{ch['username'].replace('@', '')}"
-        link1 = f"https://t.me/hackerdevs"
         rows.append([InlineKeyboardButton(text=f"📢 {ch['title']}", url=link)])
-        rows.append([InlineKeyboardButton(text=f"📢 Hackerdevs", url=link1)])
     rows.append([InlineKeyboardButton(text=t(lang, "check_sub"), callback_data="check_sub")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
