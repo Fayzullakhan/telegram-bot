@@ -12,6 +12,13 @@ SUPABASE_KEY = (
     ".c0HeVMFq5fXLRwc21LVpYtyvX10FlnvqXyMsTuBdLs4"
 )
 
+SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhpemhkd2pzcGVjb3l0b3FjbHZuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjE4NzcxNCwiZXhwIjoyMDk3NzYzNzE0fQ.EU4mPRpIBi42CwGIKY9G2eyPhRCv3zMYEI3N_Qi_o8I"
+
+client = create_client(
+    SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY
+)
+    
 _client: Client = None
 
 
